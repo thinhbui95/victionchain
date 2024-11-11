@@ -436,6 +436,7 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 	}
 	for th := 0; th < threads; th++ {
 		pend.Add(1)
+		fmt.Println("aaaaa ", th)
 		go func() {
 			defer pend.Done()
 
@@ -458,22 +459,15 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 				}
 				results[task.index] = &txTraceResult{Result: res}
 			}
+			fmt.Println("done ", th)
 		}()
 	}
 	// Feed the transactions into the tracers and return
 	feeCapacity := state.GetTRC21FeeCapacityFromState(statedb)
 	var failed error
-txloop:
 	for i, tx := range txs {
 		// Send the trace task over for execution
-		task := &txTraceTask{statedb: statedb.Copy(), index: i}
-		select {
-		case <-ctx.Done():
-			failed = ctx.Err()
-			break txloop
-		case jobs <- task:
-		}
-		//jobs <- &txTraceTask{statedb: statedb.Copy(), index: i}
+		jobs <- &txTraceTask{statedb: statedb.Copy(), index: i}
 		var balance *big.Int
 		if tx.To() != nil {
 			if value, ok := feeCapacity[*tx.To()]; ok {
@@ -488,7 +482,7 @@ txloop:
 		owner := common.Address{}
 		if _, _, _, err := core.ApplyMessage(vmenv, msg, new(core.GasPool).AddGas(msg.Gas()), owner); err != nil {
 			failed = err
-			break txloop
+			break
 		}
 
 		// Finalize the state so any modifications are written to the trie
