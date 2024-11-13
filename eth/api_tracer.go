@@ -436,7 +436,6 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 	}
 	for th := 0; th < threads; th++ {
 		pend.Add(1)
-		fmt.Println("aaaaa ", th)
 		go func() {
 			defer pend.Done()
 
@@ -459,7 +458,6 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 				}
 				results[task.index] = &txTraceResult{Result: res}
 			}
-			fmt.Println("done ", th)
 		}()
 	}
 	// Feed the transactions into the tracers and return
