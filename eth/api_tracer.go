@@ -428,12 +428,12 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 		results = make([]*txTraceResult, len(txs))
 
 		pend = new(sync.WaitGroup)
-		jobs = make(chan *txTraceTask, len(txs))
 	)
 	threads := runtime.NumCPU()
 	if threads > len(txs) {
 		threads = len(txs)
 	}
+	jobs := make(chan *txTraceTask, threads)
 	for th := 0; th < threads; th++ {
 		pend.Add(1)
 		go func() {
