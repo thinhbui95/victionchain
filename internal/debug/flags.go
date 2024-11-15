@@ -95,9 +95,9 @@ var Flags = []cli.Flag{
 	pprofAddrFlag,
 	pprofPortFlag,
 	memprofilerateFlag,
-	//blockprofilerateFlag,
-	//cpuprofileFlag,
-	//traceFlag,
+	blockprofilerateFlag,
+	cpuprofileFlag,
+	traceFlag,
 }
 
 var Glogger *log.GlogHandler
