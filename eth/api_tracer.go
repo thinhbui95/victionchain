@@ -484,8 +484,8 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 		}
 
 		// Finalize the state so any modifications are written to the trie
-		statedb.Finalise(true)
-		tomoxState = nil
+		//statedb.Finalise(true)
+		statedb = nil
 	}
 	close(jobs)
 	pend.Wait()
