@@ -17,7 +17,7 @@
 package vm
 
 import (
-	"errors"
+	//"errors"
 	"math/big"
 	"sync/atomic"
 	"time"
@@ -63,27 +63,27 @@ func run(evm *EVM, contract *Contract, input []byte, readOnly bool) ([]byte, err
 			return RunPrecompiledContract(p, input, contract)
 		}
 	}
-	if evm.ChainConfig().IsTIPTomoXCancellationFee(evm.BlockNumber) {
-		// 	for _, interpreter := range evm.interpreters {
-		// 		if interpreter.CanRun(contract.Code) {
-		// 			if evm.interpreter != interpreter {
-		// 				// Ensure that the interpreter pointer is set back
-		// 				// to its current value upon return.
-		// 				defer func(i Interpreter) {
-		// 					evm.interpreter = i
-		// 				}(evm.interpreter)
-		// 				evm.interpreter = interpreter
-		// 			}
-		// 			return interpreter.Run(contract, input, readOnly)
-		// 		}
-		// 	}
-		return evm.interpreter.Run(contract, input, readOnly)
-	} else {
-		return evm.interpreter.Run(contract, input, false)
-	}
-
-	return nil, errors.New("no compatible interpreter")
+	//if evm.ChainConfig().IsTIPTomoXCancellationFee(evm.BlockNumber) {
+	// 	for _, interpreter := range evm.interpreters {
+	// 		if interpreter.CanRun(contract.Code) {
+	// 			if evm.interpreter != interpreter {
+	// 				// Ensure that the interpreter pointer is set back
+	// 				// to its current value upon return.
+	// 				defer func(i Interpreter) {
+	// 					evm.interpreter = i
+	// 				}(evm.interpreter)
+	// 				evm.interpreter = interpreter
+	// 			}
+	// 			return interpreter.Run(contract, input, readOnly)
+	// 		}
+	// 	}
+	// 	return evm.interpreter.Run(contract, input, readOnly)
+	// } else {
+	return evm.interpreter.Run(contract, input, false)
 }
+
+//return nil, errors.New("no compatible interpreter")
+//}
 
 // Context provides the EVM with auxiliary information. Once provided
 // it shouldn't be modified.
