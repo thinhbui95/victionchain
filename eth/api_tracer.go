@@ -484,8 +484,8 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 		}
 
 		// Finalize the state so any modifications are written to the trie
-		//statedb.Finalise(true)
-		statedb = nil
+		statedb.Finalise(true)
+		log.Debug("Finalize state", "block", block.NumberU64(), "tx", tx.Hash().Hex())
 	}
 	close(jobs)
 	pend.Wait()
