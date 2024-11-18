@@ -37,9 +37,12 @@ var (
 	TIPRandomizeBlock            = big.NewInt(3464000)
 	BlackListHFBlock             = uint64(9349100)
 	TIPTRC21FeeBlock             = big.NewInt(13523400)
-	TIPTomoXBlock                = big.NewInt(20581700)
-	TIPTomoXLendingBlock         = big.NewInt(21430200)
-	TIPTomoXCancellationFeeBlock = big.NewInt(30915660)
+	// TIPTomoXBlock                = big.NewInt(20581700)
+	// TIPTomoXLendingBlock         = big.NewInt(21430200)
+	// TIPTomoXCancellationFeeBlock = big.NewInt(30915660)
+	TIPTomoXBlock                = big.NewInt(10)
+	TIPTomoXLendingBlock         = big.NewInt(10)
+	TIPTomoXCancellationFeeBlock = big.NewInt(10)
 
 	IsTestnet         bool = false
 	StoreRewardFolder string

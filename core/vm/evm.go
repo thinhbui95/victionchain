@@ -17,12 +17,13 @@
 package vm
 
 import (
-	"github.com/tomochain/tomochain/tomox/tradingstate"
 	"errors"
-	"github.com/tomochain/tomochain/params"
 	"math/big"
 	"sync/atomic"
 	"time"
+
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/tomox/tradingstate"
 
 	"github.com/tomochain/tomochain/common"
 	"github.com/tomochain/tomochain/crypto"
@@ -152,7 +153,7 @@ func NewEVM(ctx Context, statedb StateDB, tradingStateDB *tradingstate.TradingSt
 	evm := &EVM{
 		Context:      ctx,
 		StateDB:      statedb,
-		tradingStateDB: tradingStateDB,
+		tradingStateDB: nil,
 		vmConfig:     vmConfig,
 		chainConfig:  chainConfig,
 		chainRules:   chainConfig.Rules(ctx.BlockNumber),

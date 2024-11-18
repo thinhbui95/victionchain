@@ -502,13 +502,13 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 func (api *PrivateDebugAPI) computeStateDB(block *types.Block, reexec uint64) (*state.StateDB, *tradingstate.TradingStateDB, error) {
 	// If we have the state fully available, use that
 	statedb, err := api.eth.blockchain.StateAt(block.Root())
-	tomoxState := &tradingstate.TradingStateDB{}
-	if err == nil {
-		tomoxState, err = api.eth.blockchain.OrderStateAt(block)
-		if err == nil {
-			return statedb, tomoxState, nil
-		}
-	}
+	// tomoxState := &tradingstate.TradingStateDB{}
+	// if err == nil {
+	// 	tomoxState, err = api.eth.blockchain.OrderStateAt(block)
+	// 	if err == nil {
+	// 		return statedb, tomoxState, nil
+	// 	}
+	// }
 	// Otherwise try to reexec blocks until we find a state or reach our limit
 	origin := block.NumberU64()
 	database := state.NewDatabase(api.eth.ChainDb())
@@ -518,12 +518,12 @@ func (api *PrivateDebugAPI) computeStateDB(block *types.Block, reexec uint64) (*
 		if block == nil {
 			break
 		}
-		if statedb, err = state.New(block.Root(), database); err == nil {
-			tomoxState, err = api.eth.blockchain.OrderStateAt(block)
-			if err == nil {
-				break
-			}
-		}
+		// if statedb, err = state.New(block.Root(), database); err == nil {
+		// 	tomoxState, err = api.eth.blockchain.OrderStateAt(block)
+		// 	if err == nil {
+		// 		break
+		// 	}
+		// }
 	}
 	if err != nil {
 		switch err.(type) {
@@ -550,7 +550,7 @@ func (api *PrivateDebugAPI) computeStateDB(block *types.Block, reexec uint64) (*
 			return nil, nil, fmt.Errorf("block #%d not found", block.NumberU64()+1)
 		}
 		feeCapacity := state.GetTRC21FeeCapacityFromState(statedb)
-		_, _, _, err := api.eth.blockchain.Processor().Process(block, statedb, tomoxState, vm.Config{}, feeCapacity)
+		_, _, _, err := api.eth.blockchain.Processor().Process(block, statedb, nil, vm.Config{}, feeCapacity)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -572,7 +572,7 @@ func (api *PrivateDebugAPI) computeStateDB(block *types.Block, reexec uint64) (*
 	}
 	size, _ := database.TrieDB().Size()
 	log.Info("Historical state regenerated", "block", block.NumberU64(), "elapsed", time.Since(start), "size", size)
-	return statedb, tomoxState, nil
+	return statedb, nil, nil
 }
 
 // TraceTransaction returns the structured logs created during the execution of EVM
