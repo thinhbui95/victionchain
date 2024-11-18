@@ -74,8 +74,7 @@ func run(evm *EVM, contract *Contract, input []byte, readOnly bool) ([]byte, err
 					}(evm.interpreter)
 					evm.interpreter = interpreter
 				}
-				//return interpreter.Run(contract, input, readOnly)
-				return evm.interpreter.Run(contract, input, false)
+				return interpreter.Run(contract, input, readOnly)
 			}
 		}
 	} else {
@@ -152,13 +151,13 @@ type EVM struct {
 // only ever be used *once*.
 func NewEVM(ctx Context, statedb StateDB, tradingStateDB *tradingstate.TradingStateDB, chainConfig *params.ChainConfig, vmConfig Config) *EVM {
 	evm := &EVM{
-		Context:        ctx,
-		StateDB:        statedb,
-		tradingStateDB: tradingStateDB,
-		vmConfig:       vmConfig,
-		chainConfig:    chainConfig,
-		chainRules:     chainConfig.Rules(ctx.BlockNumber),
-		interpreters:   make([]Interpreter, 0, 1),
+		Context: ctx,
+		StateDB: statedb,
+		//tradingStateDB: tradingStateDB,
+		vmConfig:     vmConfig,
+		chainConfig:  chainConfig,
+		chainRules:   chainConfig.Rules(ctx.BlockNumber),
+		interpreters: make([]Interpreter, 0, 1),
 	}
 
 	// vmConfig.EVMInterpreter will be used by EVM-C, it won't be checked here
