@@ -412,14 +412,16 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 	if parent == nil {
 		return nil, fmt.Errorf("parent %x not found", block.ParentHash())
 	}
-	// reexec := defaultTraceReexec
-	// if config != nil && config.Reexec != nil {
-	// 	reexec = *config.Reexec
-	// }
-	// statedb, tomoxState, err := api.computeStateDB(parent, reexec)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	reexec := defaultTraceReexec
+	if config != nil && config.Reexec != nil {
+		reexec = *config.Reexec
+	}
+	statedb, tomoxState, err := api.computeStateDB(parent, reexec)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(" -- tomoxState: ", tomoxState);
+	fmt.Println(" -- statedb: ", statedb);
 	// Execute all the transaction contained within the block concurrently
 	// var (
 	// 	signer = types.MakeSigner(api.config, block.Number())
