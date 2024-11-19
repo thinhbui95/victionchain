@@ -26,7 +26,7 @@ import (
 
 var (
 	dir          = flag.String("dir", "", "directory to TomoChain chaindata")
-	cacheSize    = flag.Int("size", 1024, "LRU cache size")
+	cacheSize    = flag.Int("size", 1000000, "LRU cache size")
 	sercureKey   = []byte("secure-key-")
 	nWorker      = runtime.NumCPU() / 2
 	cleanAddress = []common.Address{common.HexToAddress(common.BlockSigners)}
