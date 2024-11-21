@@ -618,6 +618,7 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 		if tracer, err = tracers.New(*config.Tracer); err != nil {
 			return nil, err
 		}
+		vmenv := vm.NewEVM(vmctx, statedb, nil, api.config, vm.Config{Debug: true, Tracer: tracer})
 		// Handle timeouts and RPC cancellations
 		deadlineCtx, cancel := context.WithTimeout(ctx, timeout)
 		go func() {
@@ -629,12 +630,14 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 
 	case config == nil:
 		tracer = vm.NewStructLogger(nil)
+		vmenv := vm.NewEVM(vmctx, statedb, nil, api.config, vm.Config{Debug: true, Tracer: tracer})
 
 	default:
 		tracer = vm.NewStructLogger(config.LogConfig)
+		vmenv := vm.NewEVM(vmctx, statedb, nil, api.config, vm.Config{Debug: true, Tracer: tracer})
 	}
 	// Run the transaction with tracing enabled.
-	vmenv := vm.NewEVM(vmctx, statedb, nil, api.config, vm.Config{Debug: true, Tracer: tracer})
+	
 
 
 	owner := common.Address{}
