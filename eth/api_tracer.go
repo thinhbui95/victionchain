@@ -624,7 +624,6 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 		go func() {
 			<-deadlineCtx.Done()
 			tracer.(*tracers.Tracer).Stop(errors.New("execution timeout"))
-			vmenv.Cancel()
 		}()
 		defer cancel()
 
