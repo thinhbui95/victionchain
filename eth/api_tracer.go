@@ -604,7 +604,7 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 	var (
 		tracer vm.Tracer
 		err    error
-		vmenv  vm.EVM
+		vmenv  *vm.EVM
 	)
 	switch {
 	case config != nil && config.Tracer != nil:
