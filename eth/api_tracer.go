@@ -636,11 +636,9 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 	// Run the transaction with tracing enabled.
 	vmenv := vm.NewEVM(vmctx, statedb, nil, api.config, vm.Config{Debug: true, Tracer: tracer})
 
-	if deadlineCtx != nil {
-		select {
-		case <-deadlineCtx.Done():
-			vmenv.Cancel()
-		}
+	select {
+	case <-deadlineCtx.Done():
+		vmenv.Cancel()
 	}
 
 	owner := common.Address{}
