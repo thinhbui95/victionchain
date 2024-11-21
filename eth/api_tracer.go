@@ -605,6 +605,7 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 		tracer vm.Tracer
 		err    error
 		deadlineCtx context.Context
+		cancel context.CancelFunc
 	)
 	switch {
 	case config != nil && config.Tracer != nil:
@@ -620,7 +621,7 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 			return nil, err
 		}
 		// Handle timeouts and RPC cancellations
-		deadlineCtx, cancel := context.WithTimeout(ctx, timeout)
+		deadlineCtx, cancel = context.WithTimeout(ctx, timeout)
 		go func() {
 			<-deadlineCtx.Done()
 			tracer.(*tracers.Tracer).Stop(errors.New("execution timeout"))
