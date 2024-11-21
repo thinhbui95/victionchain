@@ -604,8 +604,6 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 	var (
 		tracer vm.Tracer
 		err    error
-		deadlineCtx context.Context
-		cancel context.CancelFunc
 	)
 	switch {
 	case config != nil && config.Tracer != nil:
@@ -621,10 +619,11 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 			return nil, err
 		}
 		// Handle timeouts and RPC cancellations
-		deadlineCtx, cancel = context.WithTimeout(ctx, timeout)
+		deadlineCtx, cancel := context.WithTimeout(ctx, timeout)
 		go func() {
 			<-deadlineCtx.Done()
 			tracer.(*tracers.Tracer).Stop(errors.New("execution timeout"))
+			vmenv.Cancel()
 		}()
 		defer cancel()
 
@@ -637,10 +636,6 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 	// Run the transaction with tracing enabled.
 	vmenv := vm.NewEVM(vmctx, statedb, nil, api.config, vm.Config{Debug: true, Tracer: tracer})
 
-	select {
-	case <-deadlineCtx.Done():
-		vmenv.Cancel()
-	}
 
 	owner := common.Address{}
 	ret, gas, failed, err := core.ApplyMessage(vmenv, message, new(core.GasPool).AddGas(message.Gas()), owner)
